@@ -27,13 +27,13 @@ class CartaCapitalSpider(scrapy.Spider):
         date = response.css('div.eltdf-post-info-date a::attr(href)').get().split("/")[-3]
         return int(date) >= 2018
     
-    def isLinkCartaCapital(link):
+    def isLinkCartaCapital(self, link):
         for section in self.start_urls:
             if (section.lower() in link.lower()):
                 return True
         return False
 
-    def isValidArticle(link):
+    def isValidArticle(self, link):
         if ((link is not None) and self.isLinkCartaCapital(link) and (self.urls.count(link) == 0)):
             return True
         return False
