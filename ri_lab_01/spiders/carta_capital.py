@@ -18,23 +18,23 @@ class CartaCapitalSpider(scrapy.Spider):
         self.start_urls = list(data.values())
 
     def parse(self, response):
-        urls = [a.attrib['href'] for quote in response.css('h3.eltdf-pt-three-title > a'):
+        urls = [a.attrib['href'] for a in response.css('h3.eltdf-pt-three-title > a')]
 
         for url in urls:
-            
             yield scrapy.Request(url, self.parse1)
     
     def parse1(self, response):
         def getDateTime(date):
             return date
-
+        def getText(text):
+            return text
 
         title = response.css('h1.eltdf-title-text::text').get()
-        section = response.url.split("/")[-2]
+        section = response.url.split("/")[-3]
         sub_title = response.css('div.wpb_text_column > div.wpb_wrapper > h3::text').get()
         author = response.css('a.eltdf-post-info-author-link::text').get()
         date = getDateTime(response.css('div.eltdf-post-info-date > a::text').get())
-        text = response.css('div.eltdf-post-text-inner::text').get()
+        text = getText(response.css('div.eltdf-post-text-inner').get())
 
         yield {
             'title': title,
@@ -42,6 +42,6 @@ class CartaCapitalSpider(scrapy.Spider):
             'author': author,
             'date': date,
             'section': section,
-            'text': ,
+            'text': text,
             'url': response.url
         }
